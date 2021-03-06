@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ivCartProductImage" type="id" />
+    <item name="ivCartDeleteItem" type="id" />
+    <item name="tvCartProductName" type="id" />
+    <item name="tvCartProductPrice" type="id" />
+    <item name="textView" type="id" />
+    <item name="tvCartProductQuantity" type="id" />
+    <item name="textView2" type="id" />
+    <item name="tvCartProductTotalPrice" type="id" />
+    <item name="textView3" type="id" />
+</resources>
