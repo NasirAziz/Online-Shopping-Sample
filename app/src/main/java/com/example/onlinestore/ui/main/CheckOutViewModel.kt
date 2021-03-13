@@ -92,9 +92,9 @@ class CheckOutViewModel : ViewModel() {
 
     private fun checkFieldsNotEmpty(binding: CheckOutFragmentBinding): Boolean {
 
-        return binding.etCOName.text.isNotEmpty()
-                && binding.etCOAddress.text.isNotEmpty()
-                && binding.etCOContact.text.isNotEmpty()
+        return !binding.etCOName.text.isNullOrEmpty()
+                && !binding.etCOAddress.text.isNullOrEmpty()
+                && !binding.etCOContact.text.isNullOrEmpty()
     }
 
 
@@ -103,7 +103,7 @@ class CheckOutViewModel : ViewModel() {
         // for (count in manager.backStackEntryCount.downTo(0))
             if (manager.backStackEntryCount > 0) {
                 Log.i("aaaa",manager.backStackEntryCount.toString())
-                val first: FragmentManager.BackStackEntry = manager.getBackStackEntryAt(0)
+                //val first: FragmentManager.BackStackEntry = manager.getBackStackEntryAt(0)
                 manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 Log.i("aaaa",manager.backStackEntryCount.toString())
 

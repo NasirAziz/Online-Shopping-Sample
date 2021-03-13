@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.CheckOutFragment">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvCheckOutName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,10 +20,11 @@
             android:layout_marginTop="12dp"
             android:textSize="20sp"
             android:text="@string/full_name"
+            android:elevation="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCOName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,10 +43,11 @@
             android:layout_marginTop="24dp"
             android:text="@string/shipping_address"
             android:textSize="20sp"
+            android:elevation="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etCOName" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCOAddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -65,7 +67,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etCOAddress" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCOContact"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -73,7 +75,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            android:elevation="0dp"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_remember_me"
@@ -123,7 +126,7 @@
 
         </RadioGroup>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPlaceOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
