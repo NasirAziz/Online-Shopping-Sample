@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.example.onlinestore.MainActivity
 import com.example.onlinestore.R
+import com.example.onlinestore.adapters.CartViewAdapter
 import com.example.onlinestore.databinding.CartViewFragmentBinding
 import kotlin.properties.Delegates
 
@@ -36,7 +38,11 @@ class CartViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CartViewViewModel::class.java)
 
-        viewModel.setAdapter(requireView())
+        val adapter = CartViewAdapter(requireContext(), CartViewViewModel.cartProducts)
+        viewModel.onProductDelete(adapter)
+        binding.rvCartView.setHasFixedSize(true)
+        binding.rvCartView.adapter = adapter
+        //viewModel.setAdapter(requireView())
 
         CartViewViewModel.grandTotalAmount.observe(viewLifecycleOwner,{
             binding.tvGrandTotal.text = resources.getString(R.string.total_payable_amount, it)

@@ -83,6 +83,7 @@ class MainFragment : Fragment() {
 
         mainGridViewAdapter = MainGridViewAdapter(requireContext(), products!!)
 
+        binding.rvMain.setHasFixedSize(true)
         binding.rvMain.adapter = mainGridViewAdapter
 
         viewModel.onProductClick(requireView(), mainGridViewAdapter, requireActivity())

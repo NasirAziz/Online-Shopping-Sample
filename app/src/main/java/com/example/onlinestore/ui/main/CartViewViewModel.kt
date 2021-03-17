@@ -62,14 +62,14 @@ class CartViewViewModel : ViewModel() {
 
     }
 
-    fun setAdapter(view: View) {
-        val adapter = CartViewAdapter(view.context, cartProducts)
-        val rv = view.findViewById<RecyclerView>(R.id.rvCartView)
-        onProductDelete(adapter)
-        rv.adapter = adapter
-    }
+//    fun setAdapter(view: View) {
+//        val adapter = CartViewAdapter(view.context, cartProducts)
+//        val rv = view.findViewById<RecyclerView>(R.id.rvCartView)
+//        onProductDelete(adapter)
+//        rv.adapter = adapter
+//    }
 
-    private fun onProductDelete(adapter: CartViewAdapter){
+    fun onProductDelete(adapter: CartViewAdapter){
         adapter.setOnItemClickListener(object : CartViewAdapter.ClickListener {
             override fun onItemClick(view: View, position: Int) {
                 deleteProductFromCart(position)
