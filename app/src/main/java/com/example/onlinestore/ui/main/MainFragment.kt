@@ -20,6 +20,9 @@ import com.example.onlinestore.databinding.MainFragmentBinding
 import com.example.onlinestore.firebase.MyFirebaseFirestore
 import com.example.onlinestore.model.Product
 import com.example.onlinestore.ui.main.MainViewModel.Companion.products
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
@@ -51,6 +54,7 @@ class MainFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var mainGridViewAdapter: MainGridViewAdapter
     private lateinit var binding: MainFragmentBinding
+    private var mInterstitialAd: InterstitialAd? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -69,9 +73,30 @@ class MainFragment : Fragment() {
         binding = MainFragmentBinding.inflate(layoutInflater)
         MainActivity.setActionBarTitle(requireActivity(), getString(R.string.app_name))
 
-        if(DetailsFragment.isProductAddedOrRemovedFromFavorites && MyFirebaseFirestore.checkIfUserIsAvailable())
+        if (DetailsFragment.isProductAddedOrRemovedFromFavorites && MyFirebaseFirestore.checkIfUserIsAvailable())
             MyFirebaseFirestore.getUserFavoritesFromServer(requireContext())
 
+        MobileAds.initialize(requireContext()) {
+            val adRequest = AdRequest.Builder().build()
+            binding.adView.loadAd(adRequest)
+        }
+        val request = AdRequest.Builder().build()
+
+        InterstitialAd.load(requireContext(),
+            "ca-app-pub-3940256099942544/1033173712",
+            request,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d("MainFragment", adError.message)
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d("MainFragment", "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                }
+
+            })
         return binding.root
     }
 
@@ -100,6 +125,49 @@ class MainFragment : Fragment() {
         })
 
         binding.fabMainCart.setOnClickListener {
+
+            mInterstitialAd?.show(requireActivity())
+
+/*
+            mInterstitialAd = object :InterstitialAd(){
+                override fun getAdUnitId(): String {
+                    TODO("Not yet implemented")
+                }
+
+                override fun show(p0: Activity) {
+                   // "ca-app-pub-3940256099942544/1033173712"
+
+                    val request = AdRequest.Builder().build()
+                    InterstitialAd.load(requireContext(),"ca-app-pub-3940256099942544/1033173712",request, InterstitialAdLoadCallback())
+                }
+
+                override fun setFullScreenContentCallback(p0: FullScreenContentCallback?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun getFullScreenContentCallback(): FullScreenContentCallback? {
+                    TODO("Not yet implemented")
+                }
+
+                override fun setImmersiveMode(p0: Boolean) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun getResponseInfo(): ResponseInfo? {
+                    TODO("Not yet implemented")
+                }
+
+                override fun setOnPaidEventListener(p0: OnPaidEventListener?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun getOnPaidEventListener(): OnPaidEventListener? {
+                    TODO("Not yet implemented")
+                }
+
+            }
+*/
+
             requireActivity().supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.container, CartViewFragment.newInstance())
