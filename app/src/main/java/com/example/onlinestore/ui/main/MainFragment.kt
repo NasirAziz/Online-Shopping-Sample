@@ -51,6 +51,7 @@ class MainFragment : Fragment() {
         }
     }
 
+
     private lateinit var viewModel: MainViewModel
     private lateinit var mainGridViewAdapter: MainGridViewAdapter
     private lateinit var binding: MainFragmentBinding
@@ -61,7 +62,6 @@ class MainFragment : Fragment() {
         val json = getJsonDataFromAsset()
         val listOfProducts: Type = object : TypeToken<List<Product>>() {}.type
         products = Gson().fromJson(json, listOfProducts)
-
 
         if(checkInternetStateIfOnline(requireContext()) && MyFirebaseFirestore.checkIfUserIsAvailable()) {
             MyFirebaseFirestore.getUserFavoritesFromServer(requireContext())
@@ -127,46 +127,6 @@ class MainFragment : Fragment() {
         binding.fabMainCart.setOnClickListener {
 
             mInterstitialAd?.show(requireActivity())
-
-/*
-            mInterstitialAd = object :InterstitialAd(){
-                override fun getAdUnitId(): String {
-                    TODO("Not yet implemented")
-                }
-
-                override fun show(p0: Activity) {
-                   // "ca-app-pub-3940256099942544/1033173712"
-
-                    val request = AdRequest.Builder().build()
-                    InterstitialAd.load(requireContext(),"ca-app-pub-3940256099942544/1033173712",request, InterstitialAdLoadCallback())
-                }
-
-                override fun setFullScreenContentCallback(p0: FullScreenContentCallback?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun getFullScreenContentCallback(): FullScreenContentCallback? {
-                    TODO("Not yet implemented")
-                }
-
-                override fun setImmersiveMode(p0: Boolean) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun getResponseInfo(): ResponseInfo? {
-                    TODO("Not yet implemented")
-                }
-
-                override fun setOnPaidEventListener(p0: OnPaidEventListener?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun getOnPaidEventListener(): OnPaidEventListener? {
-                    TODO("Not yet implemented")
-                }
-
-            }
-*/
 
             requireActivity().supportFragmentManager
                 .beginTransaction()

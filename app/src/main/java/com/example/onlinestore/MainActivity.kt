@@ -1,6 +1,5 @@
 package com.example.onlinestore
 
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -16,7 +15,6 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.onlinestore.databinding.MainActivityBinding
 import com.example.onlinestore.ui.main.FavoritesFragment
 import com.example.onlinestore.ui.main.MainFragment
-import com.example.onlinestore.ui.main.MainViewModel
 import com.example.onlinestore.ui.settings.SettingsFragment
 
 
@@ -49,6 +47,11 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
 
             R.id.Favorites -> {
+/*
+                FavoritesFragment.newInstance().setFragmentResult("key", bundleOf("k" to 1))
+                val sfm = supportFragmentManager
+                sfm.beginTransaction().add(FavoritesFragment.newInstance())
+*/
                 supportFragmentManager
                     .beginTransaction()
                     .replace(
@@ -73,7 +76,6 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
         }
-
 
         return super.onOptionsItemSelected(item)
     }

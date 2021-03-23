@@ -1,15 +1,14 @@
 package com.example.onlinestore.ui.main
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.onlinestore.MainActivity
 import com.example.onlinestore.R
 import com.example.onlinestore.databinding.DetailsFragmentBinding

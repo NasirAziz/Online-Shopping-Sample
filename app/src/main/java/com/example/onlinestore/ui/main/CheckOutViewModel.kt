@@ -3,17 +3,15 @@ package com.example.onlinestore.ui.main
 import android.content.Context
 import android.util.Log
 import android.view.View
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
-import com.example.onlinestore.MainActivity
 import com.example.onlinestore.databinding.CheckOutFragmentBinding
 import com.example.onlinestore.firebase.MyFirebaseFirestore
 import com.example.onlinestore.model.OrderProduct
+import com.example.onlinestore.model.PaymentDetails
 import com.example.onlinestore.model.UserCredentials
 import com.example.onlinestore.model.UserOrder
-import com.example.onlinestore.ui.settings.SettingsFragment
 import com.example.onlinestore.ui.settings.UserCredentialsFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -22,9 +20,13 @@ class CheckOutViewModel : ViewModel() {
 
     private var uid = FirebaseAuth.getInstance().uid
 
-    fun checkOutUserDetailsWriteToFirebase(binding: CheckOutFragmentBinding, context: Context, view:View) {
+    fun checkOutUserDetailsWriteToFirebase(
+        binding: CheckOutFragmentBinding,
+        context: Context,
+        view: View
+    ) {
 
-        if(checkFieldsNotEmpty(binding)) {
+        if (checkFieldsNotEmpty(binding)) {
 
             val name = binding.etCOName.text.toString()
             val address = binding.etCOAddress.text.toString()
@@ -38,9 +40,9 @@ class CheckOutViewModel : ViewModel() {
         }
     }
 
-    fun placeOrder(activity:FragmentActivity, view:View, binding: CheckOutFragmentBinding){
+    fun placeOrder(activity: FragmentActivity, view: View, binding: CheckOutFragmentBinding) {
         val firebase = MyFirebaseFirestore
-        if(checkFieldsNotEmpty(binding)) {
+        if (checkFieldsNotEmpty(binding)) {
 
             val name = binding.etCOName.text.toString()
             val address = binding.etCOAddress.text.toString()
@@ -50,32 +52,48 @@ class CheckOutViewModel : ViewModel() {
             val orderProducts: MutableList<OrderProduct> = mutableListOf()
 
             for (product in products) {
-                orderProducts.add( OrderProduct(product.id, product.quantity) )
+                orderProducts.add(OrderProduct(product.id, product.quantity))
             }
 
             //TODO check if COD is selected or Easypaisa then write UserOrder accordingly
             val payableCash = CartViewViewModel.grandTotalAmount.value
-            val order = UserOrder(name, contact, address, payableCash.toString(), orderProducts)
+            //////////////////////////////////////////////////////
+            //TODO added these lines for payment methods recheck before and after using correct storeID and hash
+            val method: String =
+                if (binding.rbCod.isChecked)
+                    "COD"
+                else //if (binding.rbEasypaysa.isChecked)
+                    "Easypaysa"
+//                else
+//                    null
+            val status = CheckOutFragment.paymentStatus.toString()
+            val refNum = CheckOutFragment.orderRefNum
+
+            val payment = PaymentDetails(method, status, refNum)
+            //////////////////////////////////////////////////////
+            val order = UserOrder(name, contact, address, payment, orderProducts)
 
             firebase.writeCartOrderToServer(activity, view, order)
 
-        }else{
-            Snackbar.make(view,
+        } else {
+            Snackbar.make(
+                view,
                 "Please fill the required fields.",
-                Snackbar.LENGTH_LONG).show()
+                Snackbar.LENGTH_LONG
+            ).show()
         }
 
     }
 
 
-    suspend fun updateUIWithCredentials(context: Context, binding: CheckOutFragmentBinding){
+    suspend fun updateUIWithCredentials(context: Context, binding: CheckOutFragmentBinding) {
         val fragment = UserCredentialsFragment()
         fragment.showProgressDialog(context)
 
         uid = FirebaseAuth.getInstance().uid
 
         val user = MyFirebaseFirestore.getUserCredentials(uid)
-        Log.i("aaaa",user.toString())
+        Log.i("aaaa", user.toString())
 
         if (user != null) {
 
@@ -85,7 +103,7 @@ class CheckOutViewModel : ViewModel() {
 
             fragment.dismissProgressDialog()
 
-        }else {
+        } else {
             fragment.dismissProgressDialog()
         }
     }
@@ -95,19 +113,20 @@ class CheckOutViewModel : ViewModel() {
         return !binding.etCOName.text.isNullOrEmpty()
                 && !binding.etCOAddress.text.isNullOrEmpty()
                 && !binding.etCOContact.text.isNullOrEmpty()
+                && (binding.rbEasypaysa.isChecked || binding.rbCod.isChecked)
     }
 
 
-     fun clearBackStack(activity: FragmentActivity) {
+    fun clearBackStack(activity: FragmentActivity) {
         val manager = activity.supportFragmentManager
         // for (count in manager.backStackEntryCount.downTo(0))
-            if (manager.backStackEntryCount > 0) {
-                Log.i("aaaa",manager.backStackEntryCount.toString())
-                //val first: FragmentManager.BackStackEntry = manager.getBackStackEntryAt(0)
-                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                Log.i("aaaa",manager.backStackEntryCount.toString())
+        if (manager.backStackEntryCount > 0) {
+            Log.i("aaaa", manager.backStackEntryCount.toString())
+            //val first: FragmentManager.BackStackEntry = manager.getBackStackEntryAt(0)
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            Log.i("aaaa", manager.backStackEntryCount.toString())
 
-            }
+        }
 
     }
 
