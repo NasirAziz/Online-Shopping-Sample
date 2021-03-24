@@ -49,7 +49,7 @@ class CheckOutFragment : Fragment() {
     ): View {
         binding = CheckOutFragmentBinding.inflate(layoutInflater)
         MainActivity.setActionBarTitle(requireActivity(), getString(R.string.check_out))
-        binding.webViewEasyPaysa.settings.javaScriptEnabled = true
+       // binding.webViewEasyPaysa.settings.javaScriptEnabled = true
         Log.i("aaaaResponseCode", "ResponseCode2:")
 
         return binding.root
@@ -116,8 +116,8 @@ class CheckOutFragment : Fragment() {
 //                    rg.clearCheck()
 //                }
                 R.id.rbCod -> {
-                    binding.webViewEasyPaysa.visibility = View.GONE
-                    binding.webViewEasyPaysa.clearCache(true)
+//                    binding.webViewEasyPaysa.visibility = View.GONE
+//                    binding.webViewEasyPaysa.clearCache(true)
                 }
             }
         }

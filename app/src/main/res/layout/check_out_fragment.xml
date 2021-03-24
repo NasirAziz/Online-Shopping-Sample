@@ -21,73 +21,112 @@
             android:fitsSystemWindows="true"
             tools:context=".ui.main.CheckOutFragment">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvCheckOutName"
-                android:layout_width="wrap_content"
+            <!--            <com.google.android.material.textview.MaterialTextView-->
+            <!--                android:id="@+id/tvCheckOutName"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginTop="12dp"-->
+            <!--                android:elevation="2dp"-->
+            <!--                android:text="@string/full_name"-->
+            <!--                android:textSize="20sp"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent" />-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="12dp"
-                android:elevation="2dp"
-                android:text="@string/full_name"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCOName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_margin="8dp"
-                android:inputType="text"
-                android:textSize="14sp"
+                android:hint="@string/full_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCheckOutName" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                android:elevation="2dp"
-                android:text="@string/shipping_address"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etCOName" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCOName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvCheckOutName" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCOAddress"
-                android:layout_width="0dp"
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--            <com.google.android.material.textfield.TextInputEditText-->
+            <!--                android:id="@+id/etCOName"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_margin="8dp"-->
+            <!--                android:inputType="text"-->
+            <!--                android:textSize="14sp"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/tvCheckOutName" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView5"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:elevation="2dp"-->
+            <!--                android:text="@string/shipping_address"-->
+            <!--                android:textSize="20sp"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/til1" />-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_margin="8dp"
+                android:hint="@string/shipping_address"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                app:layout_constraintTop_toBottomOf="@+id/til1">
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/contact_no"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etCOAddress" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCOAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCOContact"
-                android:layout_width="0dp"
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView6"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:text="@string/contact_no"-->
+            <!--                android:textSize="20sp"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/til2" />-->
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til3"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:elevation="0dp"
+                android:layout_width="match_parent"
+                android:hint="@string/contact_no"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintTop_toBottomOf="@+id/til2">
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCOContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/cb_remember_me"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,9 +134,9 @@
                 android:text="@string/remember_me"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etCOContact" />
+                app:layout_constraintTop_toBottomOf="@+id/til3" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,14 +158,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView7"
                 app:layout_constraintVertical_bias="0.185">
 
-                <RadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/rbCod"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:text="@string/cash_on_delivery" />
 
-                <RadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/rbEasypaysa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,22 +179,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:backgroundTint="@color/btn_check_out"
+                style="@style/Widget.MaterialComponents.Button"
+                app:cornerRadius="5dp"
+                app:elevation="5dp"
                 android:text="@string/confirm_and_place_order"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
-            <WebView
-                android:id="@+id/webViewEasyPaysa"
-                android:layout_width="0dp"
-                android:layout_height="440dp"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/btnPlaceOrder"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rg" />
+            <!-- android:backgroundTint="@color/btn_check_out"-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
