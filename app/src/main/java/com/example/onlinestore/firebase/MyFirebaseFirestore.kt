@@ -1,20 +1,16 @@
 package com.example.onlinestore.firebase
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.onlinestore.R
-import com.example.onlinestore.model.CartProduct
 import com.example.onlinestore.model.FavoriteProduct
 import com.example.onlinestore.model.UserCredentials
 import com.example.onlinestore.model.UserOrder
 import com.example.onlinestore.ui.main.*
 import com.example.onlinestore.ui.settings.UserCredentialsFragment
-import com.example.onlinestore.ui.settings.UserCredentialsViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -125,7 +121,6 @@ class MyFirebaseFirestore {
                     fragment.dismissProgressDialog()
 
             }
-
         }
 
         suspend fun getUserCredentials(uid:String?): UserCredentials?{

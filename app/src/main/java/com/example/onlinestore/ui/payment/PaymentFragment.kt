@@ -1,3 +1,4 @@
+/*
 package com.example.onlinestore.ui.payment
 
 import android.annotation.SuppressLint
@@ -236,4 +237,4 @@ class PaymentFragment : Fragment() {
         return hashString
     }
 
-}
+}*/

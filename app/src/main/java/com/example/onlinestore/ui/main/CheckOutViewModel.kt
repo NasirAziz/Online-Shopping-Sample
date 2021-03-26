@@ -26,7 +26,7 @@ class CheckOutViewModel : ViewModel() {
         view: View
     ) {
 
-        if (checkFieldsNotEmpty(binding)) {
+        if (MainFragment.checkInternetStateIfOnline(context)) {
 
             val name = binding.etCOName.text.toString()
             val address = binding.etCOAddress.text.toString()
@@ -37,12 +37,18 @@ class CheckOutViewModel : ViewModel() {
 
             val firebase = MyFirebaseFirestore
             firebase.writeUserCredentials(context, view, user)
+        } else {
+            Snackbar.make(
+                view,
+                "No internet connection please try again later",
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 
     fun placeOrder(activity: FragmentActivity, view: View, binding: CheckOutFragmentBinding) {
         val firebase = MyFirebaseFirestore
-        if (checkFieldsNotEmpty(binding)) {
+        if (MainFragment.checkInternetStateIfOnline(activity.baseContext)) {
 
             val name = binding.etCOName.text.toString()
             val address = binding.etCOAddress.text.toString()
@@ -55,17 +61,18 @@ class CheckOutViewModel : ViewModel() {
                 orderProducts.add(OrderProduct(product.id, product.quantity))
             }
 
-            //TODO check if COD is selected or Easypaisa then write UserOrder accordingly
+            //TODO check if COD is selected or JAZZCASH then write UserOrder accordingly
             val payableCash = CartViewViewModel.grandTotalAmount.value
             //////////////////////////////////////////////////////
             //TODO added these lines for payment methods recheck before and after using correct storeID and hash
-            val method: String =
-                if (binding.rbCod.isChecked)
-                    "COD"
-                else //if (binding.rbEasypaysa.isChecked)
-                    "Easypaysa"
+//            val method: String =
+//                if (binding.rbCod.isChecked)
+//                    "COD"
+//                else //if (binding.rbEasypaysa.isChecked)
+//                    "Easypaysa"
 //                else
 //                    null
+            val method = CheckOutFragment.paymentMethod
             val status = CheckOutFragment.paymentStatus.toString()
             val refNum = CheckOutFragment.orderRefNum
 
@@ -78,7 +85,7 @@ class CheckOutViewModel : ViewModel() {
         } else {
             Snackbar.make(
                 view,
-                "Please fill the required fields.",
+                "No internet connection please try again later",
                 Snackbar.LENGTH_LONG
             ).show()
         }
@@ -108,7 +115,7 @@ class CheckOutViewModel : ViewModel() {
         }
     }
 
-    private fun checkFieldsNotEmpty(binding: CheckOutFragmentBinding): Boolean {
+    fun checkFieldsNotEmpty(binding: CheckOutFragmentBinding): Boolean {
 
         return !binding.etCOName.text.isNullOrEmpty()
                 && !binding.etCOAddress.text.isNullOrEmpty()

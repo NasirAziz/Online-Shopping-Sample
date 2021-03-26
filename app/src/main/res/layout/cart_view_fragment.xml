@@ -29,16 +29,20 @@
             app:layout_constraintVertical_bias="1.0"
             tools:listitem="@layout/rv_cart_list_item_view" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCartProceedToCheckOut"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:backgroundTint="@color/btn_check_out"
             android:text="@string/check_out"
             android:textSize="14sp"
             android:textStyle="bold"
+            style="@style/Widget.MyApp.Button"
+            android:layout_margin="5dp"
+            android:elevation="10dp"
+            android:textColor="@color/white"
             android:layout_marginBottom="3dp"
+            app:cornerRadius="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

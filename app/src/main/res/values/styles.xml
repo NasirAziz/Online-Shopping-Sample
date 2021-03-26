@@ -12,4 +12,11 @@
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
+    <style name="Widget.MyApp.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/light_blue_A200</item>
+        <!--        <item name="android:stateListAnimator" tools:ignore="NewApi">-->
+        <!--            @animator/shr_next_button_state_list_anim-->
+        <!--        </item>-->
+    </style>
 </resources>

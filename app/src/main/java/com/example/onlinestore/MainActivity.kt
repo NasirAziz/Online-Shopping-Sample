@@ -1,16 +1,11 @@
 package com.example.onlinestore
 
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.onlinestore.databinding.MainActivityBinding
 import com.example.onlinestore.ui.main.FavoritesFragment
@@ -36,8 +31,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menu?.add(FAVORITES)
-//        menu?.add(ACCOUNTS)
         val inflate = MenuInflater(this)
         inflate.inflate(R.menu.options_menu_items,menu)
         return true
@@ -47,11 +40,9 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
 
             R.id.Favorites -> {
-/*
-                FavoritesFragment.newInstance().setFragmentResult("key", bundleOf("k" to 1))
-                val sfm = supportFragmentManager
-                sfm.beginTransaction().add(FavoritesFragment.newInstance())
-*/
+//                FavoritesFragment.newInstance().setFragmentResult("key", bundleOf("k" to 1))
+//                val sfm = supportFragmentManager
+//                sfm.beginTransaction().add(FavoritesFragment.newInstance())
                 supportFragmentManager
                     .beginTransaction()
                     .replace(
@@ -81,31 +72,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    companion object{
+    companion object {
 
-        private fun networkStatePermissionGranted(context: Context): Boolean {
-            return when (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_NETWORK_STATE)) {
-                PackageManager.PERMISSION_GRANTED -> true
-                else -> false
-            }
-        }
+//        private fun networkStatePermissionGranted(context: Context): Boolean {
+//            return when (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_NETWORK_STATE)) {
+//                PackageManager.PERMISSION_GRANTED -> true
+//                else -> false
+//            }
+//        }
 
+//        fun clearBackStack() {
+//            val manager = MainActivity().supportFragmentManager
+//            for (count in manager.backStackEntryCount.downTo(0)) {
+//                Log.i("aaaa", manager.backStackEntryCount.toString() + " $count")
+//                if (manager.backStackEntryCount >= 0) {
+//                    Log.i("aaaa", manager.backStackEntryCount.toString() + " $count")
+//                    val first: FragmentManager.BackStackEntry =
+//                        manager.getBackStackEntryAt(count )
+//                    manager.popBackStack(first.id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                }
+//            }
+//        }
 
-        fun clearBackStack() {
-            val manager = MainActivity().supportFragmentManager
-            for (count in manager.backStackEntryCount.downTo(0)) {
-                Log.i("aaaa", manager.backStackEntryCount.toString() + " $count")
-                if (manager.backStackEntryCount >= 0) {
-                    Log.i("aaaa", manager.backStackEntryCount.toString() + " $count")
-                    val first: FragmentManager.BackStackEntry =
-                        manager.getBackStackEntryAt(count )
-                    manager.popBackStack(first.id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                }
-            }
-        }
-
-        fun setActionBarTitle(activity: FragmentActivity, title: String){
-            val actionBar =  (activity as AppCompatActivity).supportActionBar
+        fun setActionBarTitle(activity: FragmentActivity, title: String) {
+            val actionBar = (activity as AppCompatActivity).supportActionBar
             actionBar?.title = title
         }
 

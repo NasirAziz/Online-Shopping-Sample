@@ -27,6 +27,16 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:reverseLayout="false" />
 
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="2dp"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-3940256099942544/6300978111" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabMainCart"
             android:layout_width="80dp"
@@ -39,14 +49,5 @@
             android:src="@drawable/ic_shopping_cart_24"
             android:contentDescription="@string/open_cart" />
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="2dp"
-            app:adSize="BANNER"
-            app:adUnitId="ca-app-pub-3940256099942544/6300978111" />
     </RelativeLayout>
 </layout>

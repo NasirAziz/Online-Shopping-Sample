@@ -2,6 +2,7 @@ package com.example.onlinestore.ui.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,15 +11,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import com.example.onlinestore.JazzPaymentActivity
 import com.example.onlinestore.MainActivity
 import com.example.onlinestore.R
 import com.example.onlinestore.databinding.CheckOutFragmentBinding
-import com.example.onlinestore.ui.payment.PaymentFragment
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,9 +31,18 @@ class CheckOutFragment : Fragment() {
 
     companion object {
         fun newInstance() = CheckOutFragment()
-        const val FRAGMENT_RESULT_KEY = "STATUS"
-        const val PAYMENT_STATUS_CODE = "STATUS_CODE"
 
+        //        const val FRAGMENT_RESULT_KEY = "STATUS"
+//        const val PAYMENT_STATUS_CODE = "STATUS_CODE"
+        const val KEY_PRICE = "PRICE"
+        const val KEY_ORDER_REF_NO = "ORDER_REF_NO"
+
+        private const val PAYMENT_STATUS_SUCCESS = 0
+        private const val PAYMENT_STATUS_FAILED = -1
+        private const val PAYMENT_METHOD_COD = "COD"
+        private const val PAYMENT_METHOD_JAZZ = "JAZZ"
+
+        lateinit var paymentMethod: String
         var paymentStatus by Delegates.notNull<Int>()
         var orderRefNum: String = "null"
 
@@ -59,10 +69,10 @@ class CheckOutFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CheckOutViewModel::class.java)
 
-        setFragmentResultListener(FRAGMENT_RESULT_KEY) { key: String, bundle: Bundle ->
+/*        setFragmentResultListener(FRAGMENT_RESULT_KEY) { key: String, bundle: Bundle ->
             Log.i("aaabb", bundle.getString("status").toString())
 
-            //TODO check below conditions when storeId and hash are valid parameters
+            //check below conditions when storeId and hash are valid parameters
             val status = bundle.getString("status")
             if (status.equals("failed")) {
                 paymentStatus = -1
@@ -71,7 +81,7 @@ class CheckOutFragment : Fragment() {
                 paymentStatus = 0
                 orderRefNum = bundle.getString("orderRef")!!
             }
-        }
+        }*/
 
         if (FirebaseAuth.getInstance().uid != null) {
             CoroutineScope(Dispatchers.Main).launch {
@@ -103,51 +113,85 @@ class CheckOutFragment : Fragment() {
 
         binding.rg.setOnCheckedChangeListener { rg, checkedId ->
             when (checkedId) {
-//                R.id.rbEasypaysa -> {
-//                    //binding.webViewEasyPaysa.visibility = View.VISIBLE
-//                    //binding.webViewEasyPaysa.postUrl("https://easypay.easypaisa.com.pk/easypay/Index.jsf",)
-//                    //startPaymentActivityForResult.launch(Intent(requireContext(),))
-//                    requireActivity()
-//                        .supportFragmentManager.popBackStack()
-////                        .beginTransaction()
-////                        .replace(R.id.container, PaymentFragment.newInstance())
-////                        .addToBackStack(this.javaClass.name)
-////                        .commit()
-//                    rg.clearCheck()
-//                }
+                R.id.rbEasypaysa -> {
+                    paymentMethod = PAYMENT_METHOD_JAZZ
+
+                    val intent = Intent(requireContext(), JazzPaymentActivity::class.java)
+                    val amount = CartViewViewModel.grandTotalAmount.value
+                    intent.putExtra(KEY_PRICE, amount)
+                    startJazzPaymentActivityForResult.launch(intent)
+
+                }
                 R.id.rbCod -> {
-//                    binding.webViewEasyPaysa.visibility = View.GONE
-//                    binding.webViewEasyPaysa.clearCache(true)
+                    paymentMethod = PAYMENT_METHOD_COD
                 }
             }
         }
 
-        binding.rbEasypaysa.setOnClickListener {
-            if (binding.rbEasypaysa.isChecked)
-                requireActivity()
-                    .supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, PaymentFragment.newInstance())
-                    .addToBackStack(this.javaClass.name)
-                    .commit()
-        }
-
         binding.btnPlaceOrder.setOnClickListener {
+            if (viewModel.checkFieldsNotEmpty(binding)) {
+                if (isRememberMeChecked) {
+                    if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_SUCCESS) {
+                        viewModel.checkOutUserDetailsWriteToFirebase(
+                            binding,
+                            requireContext(),
+                            requireView()
+                        )
+                        viewModel.placeOrder(MainActivity(), requireView(), binding)
+                    } else if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_FAILED) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Payment was Failed try again",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else if (paymentMethod == PAYMENT_METHOD_COD) {
+                        //send cart data to server with credentials
+                        viewModel.checkOutUserDetailsWriteToFirebase(
+                            binding,
+                            requireContext(),
+                            requireView()
+                        )
+                        viewModel.placeOrder(requireActivity(), requireView(), binding)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Something went wrong please try again",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
 
-            if (isRememberMeChecked && paymentStatus == 0) {
+                } else if (!isRememberMeChecked) {
+                    if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_SUCCESS) {
+                        //send cart data to server without writing credentials
+                        viewModel.placeOrder(requireActivity(), requireView(), binding)
+                    } else if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_FAILED) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Payment was Failed try again",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else if (paymentMethod == PAYMENT_METHOD_COD) {
+                        //send cart data to server without writing credentials
+                        viewModel.placeOrder(requireActivity(), requireView(), binding)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Something went wrong please try again",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
 
-                viewModel.checkOutUserDetailsWriteToFirebase(
-                    binding,
-                    requireContext(),
-                    requireView()
-                )
-                viewModel.placeOrder(MainActivity(), requireView(), binding)
-
-
-            } else if (!isRememberMeChecked && paymentStatus == 0) {
-                //send cart data to server without writing credentials
-                viewModel.placeOrder(requireActivity(), requireView(), binding)
-
+                }
+            } else {
+                Snackbar.make(
+                    view,
+                    "Please fill the required fields.",
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
 
         }
@@ -199,21 +243,29 @@ class CheckOutFragment : Fragment() {
             }
         }
 
-    private val startPaymentActivityForResult =
+    private val startJazzPaymentActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             // Check that the result is OK
-            Log.i("aaaaResponseCode", "ResponseCode: ${result.resultCode}")
+            Log.i("sssss", result.resultCode.toString())
             if (result.resultCode == Activity.RESULT_OK) {
                 // Get String data from Intent
                 val responseCode: String? = result.data?.getStringExtra("status")
-                Log.i("aaaaResponseCode", "ResponseCode: $responseCode")
                 if (responseCode == "000") {
+                    orderRefNum = result.data?.getStringExtra(KEY_ORDER_REF_NO).toString()
+                    paymentStatus = PAYMENT_STATUS_SUCCESS
+                    paymentMethod = PAYMENT_METHOD_JAZZ
+                    orderRefNum
                     Toast.makeText(requireContext(), "Payment Success", Toast.LENGTH_SHORT)
                         .show()
                 } else {
+                    paymentStatus = PAYMENT_STATUS_FAILED
                     Toast.makeText(requireContext(), "Payment Failed", Toast.LENGTH_SHORT)
                         .show()
                 }
+            } else {
+                Log.i("sssss", result.resultCode.toString())
+                paymentMethod = PAYMENT_METHOD_JAZZ
+                paymentStatus = PAYMENT_STATUS_FAILED
             }
         }
 
