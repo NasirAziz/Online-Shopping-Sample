@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -52,15 +53,20 @@ class CheckOutFragment : Fragment() {
     private lateinit var binding: CheckOutFragmentBinding
     private var isRememberMeChecked = false
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.Sort_By).isVisible = false
+        super.onPrepareOptionsMenu(menu)
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
+
         binding = CheckOutFragmentBinding.inflate(layoutInflater)
         MainActivity.setActionBarTitle(requireActivity(), getString(R.string.check_out))
-       // binding.webViewEasyPaysa.settings.javaScriptEnabled = true
-        Log.i("aaaaResponseCode", "ResponseCode2:")
 
         return binding.root
     }

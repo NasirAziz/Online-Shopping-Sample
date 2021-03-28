@@ -2,8 +2,8 @@ package com.example.onlinestore.ui.main
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -40,15 +40,19 @@ class DetailsFragment : Fragment() {
     private var isMainFragment by Delegates.notNull<Boolean>()
     private var isFavorite = false
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.Sort_By).isVisible = false
+        super.onPrepareOptionsMenu(menu)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        setHasOptionsMenu(true)
         isMainFragment = requireArguments().getBoolean("isMainFragment")
-        products = if(isMainFragment)
+        products = if (isMainFragment)
             MainViewModel.products!!
         else
             FavoritesViewModel.favProducts
-        Log.i("zzzzz",products.sortedBy { it.rate }.toString())
 
         position = requireArguments().getInt("position")
 
@@ -65,28 +69,31 @@ class DetailsFragment : Fragment() {
                     for (product in MyFirebaseFirestore.userFavorites!!) {
                         if (products[position].id == product.productId) {
                             isFavorite = true
-                            binding.ivDetailsFavorite.background =
-                                ContextCompat.getDrawable(
+                            binding.ivDetailsFavorite.setImageResource(R.drawable.ic_favorite_24)
+                            binding.ivDetailsFavorite.setColorFilter(
+                                ContextCompat.getColor(
                                     requireContext(),
-                                    R.drawable.ic_favorite_24
+                                    R.color.color_red
                                 )
-                            // binding.ivDetailsFavorite.setColorFilter(ContextCompat.getColor(requireContext(),R.color.color_red))
+                            )
 
                         }
                     }
             }else {
                 isFavorite = true
-                binding.ivDetailsFavorite.background =
-                    ContextCompat.getDrawable(
+                binding.ivDetailsFavorite.setImageResource(R.drawable.ic_favorite_24)
+                binding.ivDetailsFavorite.setColorFilter(
+                    ContextCompat.getColor(
                         requireContext(),
-                        R.drawable.ic_favorite_24
+                        R.color.color_red
                     )
+                )
+
             }
         }
 
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -117,9 +124,12 @@ class DetailsFragment : Fragment() {
                             products[position].id.toString()
                         )
 
-                        binding.ivDetailsFavorite.background = ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.ic_favorite_border_24
+                        binding.ivDetailsFavorite.setImageResource(R.drawable.ic_favorite_border_24)
+                        binding.ivDetailsFavorite.setColorFilter(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.non_fav_color
+                            )
                         )
                         isFavorite = false
 
@@ -132,20 +142,30 @@ class DetailsFragment : Fragment() {
                             products[position].id.toString(),
                             favProduct
                         )
-                        binding.ivDetailsFavorite.background =
-                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_24)
+                        binding.ivDetailsFavorite.setImageResource(R.drawable.ic_favorite_24)
+                        binding.ivDetailsFavorite.setColorFilter(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.color_red
+                            )
+                        )
                         isFavorite = true
                     }
-               }else if(!isMainFragment){
+               }else if(!isMainFragment) {
 
-                    MyFirebaseFirestore.deleteUserFavorite(
+                   MyFirebaseFirestore.deleteUserFavorite(
                        requireView(),
                        products[position].id.toString()
                    )
-                   binding.ivDetailsFavorite.background = ContextCompat.getDrawable(
-                       requireContext(),
-                       R.drawable.ic_favorite_border_24
+
+                   binding.ivDetailsFavorite.setImageResource(R.drawable.ic_favorite_border_24)
+                   binding.ivDetailsFavorite.setColorFilter(
+                       ContextCompat.getColor(
+                           requireContext(),
+                           R.color.non_fav_color
+                       )
                    )
+
                    //TODO check this line of code
                    //this is the solution to favorite's bug
                    FavoritesViewModel.favProducts.removeAt(position)

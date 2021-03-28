@@ -2,18 +2,18 @@ package com.example.onlinestore.ui.settings
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import com.example.onlinestore.MainActivity
 import com.example.onlinestore.R
-
 import com.example.onlinestore.databinding.SettingsFragmentBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
@@ -30,10 +30,16 @@ class SettingsFragment : Fragment() {
     private lateinit var viewModel: SettingsViewModel
     private lateinit var binding: SettingsFragmentBinding
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.Sort_By).isVisible = false
+        super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
 
         binding = SettingsFragmentBinding.inflate(layoutInflater)
 

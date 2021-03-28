@@ -16,5 +16,6 @@ data class OrderProduct(
 data class PaymentDetails(
     val method: String,
     val status: String,
+    val payableCash: String,
     val orderRefNum: String = "COD"
 )

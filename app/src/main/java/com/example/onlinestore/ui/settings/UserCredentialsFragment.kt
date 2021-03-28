@@ -2,12 +2,13 @@ package com.example.onlinestore.ui.settings
 
 import android.app.Dialog
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.onlinestore.MainActivity
 import com.example.onlinestore.R
 import com.example.onlinestore.databinding.UserCredentailsFragmentBinding
@@ -15,9 +16,6 @@ import com.example.onlinestore.firebase.MyFirebaseFirestore
 import com.example.onlinestore.model.UserCredentials
 import com.example.onlinestore.ui.main.MainFragment
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class UserCredentialsFragment : Fragment() {
 
@@ -28,11 +26,18 @@ class UserCredentialsFragment : Fragment() {
 
     private lateinit var viewModel: UserCredentialsViewModel
     private lateinit var binding: UserCredentailsFragmentBinding
-    var dialog:Dialog? = null
+    var dialog: Dialog? = null
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.Sort_By).isVisible = false
+        super.onPrepareOptionsMenu(menu)
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        setHasOptionsMenu(true)
 
         binding = UserCredentailsFragmentBinding.inflate(layoutInflater)
         dialog = Dialog(requireContext())

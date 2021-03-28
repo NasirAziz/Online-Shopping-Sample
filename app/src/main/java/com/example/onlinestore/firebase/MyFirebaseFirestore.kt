@@ -29,7 +29,6 @@ class MyFirebaseFirestore {
 
         fun checkIfUserIsAvailable() = FirebaseAuth.getInstance().uid != null
 
-
         fun getUserFavoritesFromServer(context: Context){
             try {
                 MyFirebaseFirestore().database

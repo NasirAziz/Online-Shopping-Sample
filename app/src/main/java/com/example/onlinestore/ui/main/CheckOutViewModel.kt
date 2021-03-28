@@ -61,9 +61,10 @@ class CheckOutViewModel : ViewModel() {
                 orderProducts.add(OrderProduct(product.id, product.quantity))
             }
 
-            //TODO check if COD is selected or JAZZCASH then write UserOrder accordingly
-            val payableCash = CartViewViewModel.grandTotalAmount.value
             //////////////////////////////////////////////////////
+            //check if COD is selected or JAZZCASH then write UserOrder accordingly
+            val payableCash = CartViewViewModel.grandTotalAmount.value
+
             //TODO added these lines for payment methods recheck before and after using correct storeID and hash
 //            val method: String =
 //                if (binding.rbCod.isChecked)
@@ -76,7 +77,7 @@ class CheckOutViewModel : ViewModel() {
             val status = CheckOutFragment.paymentStatus.toString()
             val refNum = CheckOutFragment.orderRefNum
 
-            val payment = PaymentDetails(method, status, refNum)
+            val payment = PaymentDetails(method, status, payableCash.toString(), refNum)
             //////////////////////////////////////////////////////
             val order = UserOrder(name, contact, address, payment, orderProducts)
 
