@@ -84,16 +84,21 @@ class FavoritesFragment : Fragment() {
         val adapter = MainGridViewAdapter(requireContext(), FavoritesViewModel.favProducts)
         binding.rvFavorites.adapter = adapter
 
-        adapter.setOnItemClickListener(object : MainGridViewAdapter . ClickListener {
+        adapter.setOnItemClickListener(object : MainGridViewAdapter.ClickListener {
             override fun onItemClick(view: View, position: Int, productQuantity: Int) {
                 if (view == view.findViewById(R.id.ivAddToCart) as View) {
 
                     if (productQuantity > 0) {
-                                    CartViewViewModel.addItemToCart(FavoritesViewModel.favProducts[position], productQuantity)
-                                    Snackbar.make(view,
-                                        "${FavoritesViewModel.favProducts[position].name} with quantity $productQuantity added to cart",
-                                        Snackbar.LENGTH_SHORT)
-                                        .show()
+                        CartViewViewModel.addItemToCart(
+                            FavoritesViewModel.favProducts[position],
+                            productQuantity
+                        )
+                        Snackbar.make(
+                            view,
+                            "${FavoritesViewModel.favProducts[position].name} with quantity $productQuantity added to cart",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .show()
                     }
 
                 } else {
@@ -101,7 +106,7 @@ class FavoritesFragment : Fragment() {
                     activity?.supportFragmentManager
                         ?.beginTransaction()
                         ?.replace(R.id.container, DetailsFragment.newInstance(position, false))
-                        ?.addToBackStack(newInstance().javaClass.name)
+                        ?.addToBackStack(this.javaClass.name)
                         ?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         ?.commit()
                 }

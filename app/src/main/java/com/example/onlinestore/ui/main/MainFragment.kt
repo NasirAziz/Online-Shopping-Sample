@@ -63,19 +63,6 @@ class MainFragment : Fragment() {
         val listOfProducts: Type = object : TypeToken<List<Product>>() {}.type
         products = Gson().fromJson(json, listOfProducts)
 
-        if(checkInternetStateIfOnline(requireContext()) && MyFirebaseFirestore.checkIfUserIsAvailable()) {
-            MyFirebaseFirestore.getUserFavoritesFromServer(requireContext())
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = MainFragmentBinding.inflate(layoutInflater)
-        MainActivity.setActionBarTitle(requireActivity(), getString(R.string.app_name))
-
-        if (DetailsFragment.isProductAddedOrRemovedFromFavorites && MyFirebaseFirestore.checkIfUserIsAvailable())
-            MyFirebaseFirestore.getUserFavoritesFromServer(requireContext())
-
         MobileAds.initialize(requireContext()) {
             val adRequest = AdRequest.Builder().build()
             binding.adView.loadAd(adRequest)
@@ -97,6 +84,23 @@ class MainFragment : Fragment() {
                 }
 
             })
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        binding = MainFragmentBinding.inflate(layoutInflater)
+        MainActivity.setActionBarTitle(requireActivity(), getString(R.string.app_name))
+
+        mainGridViewAdapter = MainGridViewAdapter(requireContext(), products!!)
+        binding.rvMain.setHasFixedSize(true)
+        binding.rvMain.adapter = mainGridViewAdapter
+
+        if (checkInternetStateIfOnline(requireContext()) && MyFirebaseFirestore.checkIfUserIsAvailable()) {
+            MyFirebaseFirestore.getUserFavoritesFromServer(requireContext())
+        } else if (DetailsFragment.isProductAddedOrRemovedFromFavorites && MyFirebaseFirestore.checkIfUserIsAvailable())
+            MyFirebaseFirestore.getUserFavoritesFromServer(requireContext())
+
         return binding.root
     }
 
@@ -105,11 +109,6 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
-        mainGridViewAdapter = MainGridViewAdapter(requireContext(), products!!)
-
-        binding.rvMain.setHasFixedSize(true)
-        binding.rvMain.adapter = mainGridViewAdapter
 
         viewModel.onProductClick(requireView(), mainGridViewAdapter, requireActivity())
 
@@ -126,7 +125,7 @@ class MainFragment : Fragment() {
 
         binding.fabMainCart.setOnClickListener {
 
-            mInterstitialAd?.show(requireActivity())
+            // mInterstitialAd?.show(requireActivity())
 
             requireActivity().supportFragmentManager
                 .beginTransaction()
@@ -157,15 +156,24 @@ class MainFragment : Fragment() {
 }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.A_Z->{
+        when (item.itemId) {
+            R.id.Favorites -> {
+                requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, FavoritesFragment.newInstance())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    //.setCustomAnimations(R.animator.slide_in,R.animator.slide_out)
+                    .addToBackStack(this.javaClass.name)
+                    .commit()
+            }
+            R.id.A_Z -> {
                 val comparatorAtoZ = Comparator<Product> { p1, p2 ->
                     return@Comparator p1.name.compareTo(p2.name)
                 }
                 sortRVItems(comparatorAtoZ)
                 return true
             }
-            R.id.Rating->{
+            R.id.Rating -> {
                 val comparatorReviewRating = Comparator<Product> { p1, p2 ->
                     return@Comparator p2.review - p1.review
                 }

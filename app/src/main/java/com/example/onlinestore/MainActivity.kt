@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.onlinestore.databinding.MainActivityBinding
-import com.example.onlinestore.ui.main.FavoritesFragment
 import com.example.onlinestore.ui.main.MainFragment
 import com.example.onlinestore.ui.settings.SettingsFragment
 
@@ -37,23 +36,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
 
-            R.id.Favorites -> {
-//                FavoritesFragment.newInstance().setFragmentResult("key", bundleOf("k" to 1))
-//                val sfm = supportFragmentManager
-//                sfm.beginTransaction().add(FavoritesFragment.newInstance())
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(
-                        R.id.container,
-                        FavoritesFragment.newInstance()
-                    )
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack(MainFragment.newInstance().javaClass.name)
-                    .commit()
-
-            }
+//            R.id.Favorites -> {
+////                FavoritesFragment.newInstance().setFragmentResult("key", bundleOf("k" to 1))
+////                val sfm = supportFragmentManager
+////                sfm.beginTransaction().add(FavoritesFragment.newInstance())
+//                supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(
+//                        R.id.container,
+//                        FavoritesFragment.newInstance()
+//                    )
+//                    //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                    .setCustomAnimations(R.animator.slide_in,R.animator.slide_out)
+//                    .addToBackStack(MainFragment.newInstance().javaClass.name)
+//                    .commit()
+//
+//            }
             R.id.Account -> {
 
                 supportFragmentManager
