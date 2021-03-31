@@ -3,7 +3,6 @@ package com.example.onlinestore.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -28,10 +27,10 @@ class FavoritesFragment : Fragment() {
     private lateinit var viewModel: FavoritesViewModel
     private lateinit var binding: FavoritesFragmentBinding
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
+/*    override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.Sort_By).isVisible = false
         super.onPrepareOptionsMenu(menu)
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

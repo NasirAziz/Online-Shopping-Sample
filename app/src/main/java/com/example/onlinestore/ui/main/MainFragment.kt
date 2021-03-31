@@ -5,10 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -112,13 +110,13 @@ class MainFragment : Fragment() {
 
         viewModel.onProductClick(requireView(), mainGridViewAdapter, requireActivity())
 
-        binding.rvMain.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+        binding.rvMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy > 50){
+                if (dy > 50) {
                     binding.fabMainCart.hide()
                 }
-                if(dy < 0)
+                if (dy < 0)
                     binding.fabMainCart.show()
             }
         })
@@ -151,8 +149,8 @@ class MainFragment : Fragment() {
 
     private fun sortRVItems(comparator: java.util.Comparator<Product>) {
 
-    Collections.sort(products ,comparator)
-    mainGridViewAdapter.notifyDataSetChanged()
+        Collections.sort(products, comparator)
+        mainGridViewAdapter.notifyDataSetChanged()
 }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -180,7 +178,7 @@ class MainFragment : Fragment() {
                 sortRVItems(comparatorReviewRating)
                 return true
             }
-            R.id.Price_Low_to_High->{
+            R.id.Price_Low_to_High -> {
                 val comparatorPrice = Comparator<Product> { p1, p2 ->
                     return@Comparator p1.price - p2.price
                 }
@@ -190,6 +188,34 @@ class MainFragment : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
         return false
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.options_menu_items, menu)
+        val searchViewItem = menu.findItem(R.id.SearchView)
+        val searchView = searchViewItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+//                for (product in products!!) {
+//                    if (product.name.contains(query!!, true)) {
+//                        Log.i("brrrrr",product.name)
+//                    }
+//                    else {
+//                        Toast.makeText(requireContext(), "No Match found", Toast.LENGTH_LONG).show()
+//                    }
+//                }
+                mainGridViewAdapter.getFilter().filter(query)
+                searchView.clearFocus()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                mainGridViewAdapter.getFilter().filter(newText)
+                return false
+            }
+
+        })
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
 }

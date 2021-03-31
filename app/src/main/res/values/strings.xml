@@ -32,5 +32,7 @@
     <string name="date">Date</string>
     <string name="rating">Rating</string>
     <string name="price_low_to_high">Price Low to High</string>
+    <string name="search">Search</string>
+    <string name="search_hint">e.g. Nulla</string>
 
 </resources>

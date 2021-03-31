@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -30,10 +29,10 @@ class SettingsFragment : Fragment() {
     private lateinit var viewModel: SettingsViewModel
     private lateinit var binding: SettingsFragmentBinding
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.Sort_By).isVisible = false
-        super.onPrepareOptionsMenu(menu)
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        menu.findItem(R.id.Sort_By).isVisible = false
+//        super.onPrepareOptionsMenu(menu)
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

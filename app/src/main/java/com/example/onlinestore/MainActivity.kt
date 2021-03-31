@@ -31,25 +31,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflate = MenuInflater(this)
-        inflate.inflate(R.menu.options_menu_items,menu)
+       // inflate.inflate(R.menu.options_menu_items, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-
+//
 //            R.id.Favorites -> {
-////                FavoritesFragment.newInstance().setFragmentResult("key", bundleOf("k" to 1))
-////                val sfm = supportFragmentManager
-////                sfm.beginTransaction().add(FavoritesFragment.newInstance())
 //                supportFragmentManager
 //                    .beginTransaction()
 //                    .replace(
 //                        R.id.container,
 //                        FavoritesFragment.newInstance()
 //                    )
-//                    //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                    .setCustomAnimations(R.animator.slide_in,R.animator.slide_out)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+////                    .setCustomAnimations(R.animator.slide_in,R.animator.slide_out)
 //                    .addToBackStack(MainFragment.newInstance().javaClass.name)
 //                    .commit()
 //

@@ -1,10 +1,14 @@
 package com.example.onlinestore.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Adapter
+import android.widget.Filter
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.onlinestore.R
@@ -14,17 +18,18 @@ import com.shawnlin.numberpicker.NumberPicker
 class MainGridViewAdapter(private val context: Context, private val products: List<Product>):
     RecyclerView.Adapter<MainGridViewAdapter.MyViewHolder>() {
 
-    private var onClickListener:ClickListener? = null
+    private var onClickListener: ClickListener? = null
+    private var filteredProducts: MutableList<Product> = products as MutableList<Product>
 
     interface ClickListener {
         fun onItemClick(view: View, position: Int, productQuantity: Int)
     }
 
-    fun setOnItemClickListener(clickListener: ClickListener){
+    fun setOnItemClickListener(clickListener: ClickListener) {
         this.onClickListener = clickListener
     }
 
-    inner class MyViewHolder(view: View): RecyclerView.ViewHolder(view){
+    inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         init {
 
@@ -55,19 +60,19 @@ class MainGridViewAdapter(private val context: Context, private val products: Li
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val data = products[position]
+        var data = filteredProducts[position]
         Glide.with(context)
-                .load(
-                        if (position % 2 == 0)
-                            R.drawable.productimage__3_
-                        else
-                            R.drawable.productimage__4_
-                )
-                .centerCrop()
-                .into(holder.image)
+            .load(
+                if (position % 2 == 0)
+                    R.drawable.productimage__3_
+                else
+                    R.drawable.productimage__4_
+            )
+            .centerCrop()
+            .into(holder.image)
 
-        holder.productName.text = data.name
-        holder.productPrice.text = data.price.toString() + " Rs"
+        holder.productName.text = filteredProducts[position].name
+        holder.productPrice.text = filteredProducts[position].price.toString() + " Rs"
         //holder.productRating.text = data.rate.toString()
 
         holder.cart.setOnClickListener {
@@ -75,6 +80,69 @@ class MainGridViewAdapter(private val context: Context, private val products: Li
         }
 
     }
+/*    fun filter(q: String) {
+        var query = q
+        //items.clear()
+        if (query.isEmpty()) {
+            //items.addAll(itemsCopy)
+        } else {
+            query = query.toLowerCase(Locale.ROOT)
+//            for (item in itemsCopy) {
+//                if (item.name.toLowerCase().contains(text)) {
+//                    items.add(item)
+//                }
+//            }
+        }
+        notifyDataSetChanged()
+    }*/
 
-    override fun getItemCount(): Int = products.size
+    /**
+     *
+     * Returns a filter that can be used to constrain data with a filtering
+     * pattern.
+     *
+     *
+     * This method is usually implemented by [Adapter]
+     * classes.
+     *
+     * @return a filter used to constrain data
+     */
+    fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence): FilterResults {
+                val charSequenceString = constraint.toString()
+                //  Log.i("performFiltering","$constraint,, ")
+                if (charSequenceString.isEmpty()) {
+                    filteredProducts = products as MutableList<Product>
+                    //  Log.i("performFiltering","$constraint,, isempty")
+                } else {
+                    //  Log.i("performFiltering","$constraint,,nope ")
+                    val filteredList: MutableList<Product> = mutableListOf()
+                    for (product in products) {
+                        if (product.name.contains(charSequenceString, true)) {
+                            filteredList.add(product)
+                            Log.i("performFiltering", "$constraint,,$filteredList ")
+                        }
+                        //Log.i("performFiltering","$constraint,before, $filteredProducts")
+                        filteredProducts = filteredList
+                        // Log.i("performFiltering","$constraint,after,$filteredProducts ")
+
+                    }
+                }
+                val results = FilterResults()
+                results.values = filteredProducts
+                //  Log.i("performFiltering","$constraint,result.values,${results.count} ")
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults) {
+                filteredProducts = results.values as MutableList<Product>
+                //    Log.i("performFilteringresult", "$constraint,results.values, ${results.values}")
+
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun getItemCount(): Int = filteredProducts.size
 }

@@ -3,7 +3,6 @@ package com.example.onlinestore.ui.main
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -40,10 +39,10 @@ class DetailsFragment : Fragment() {
     private var isMainFragment by Delegates.notNull<Boolean>()
     private var isFavorite = false
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.Sort_By).isVisible = false
-        super.onPrepareOptionsMenu(menu)
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        menu.findItem(R.id.Sort_By).isVisible = false
+//        super.onPrepareOptionsMenu(menu)
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

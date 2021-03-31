@@ -23,7 +23,6 @@ class MyFirebaseFirestore {
 
     private val database: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-
     companion object{
         var userFavorites: MutableList<FavoriteProduct>? = mutableListOf()
 
