@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -23,15 +22,14 @@ class UserCredentialsFragment : Fragment() {
         fun newInstance() = UserCredentialsFragment()
     }
 
-
     private lateinit var viewModel: UserCredentialsViewModel
     private lateinit var binding: UserCredentailsFragmentBinding
     var dialog: Dialog? = null
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.Sort_By).isVisible = false
-        super.onPrepareOptionsMenu(menu)
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        menu.findItem(R.id.Sort_By).isVisible = false
+//        super.onPrepareOptionsMenu(menu)
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,9 +77,9 @@ class UserCredentialsFragment : Fragment() {
 
     private fun checkFieldsNotEmpty(): Boolean {
 
-        return binding.etCredentialsName.text.isNotEmpty()
-                && binding.etCredentialsAddress.text.isNotEmpty()
-                && binding.etCredentialsContact.text.isNotEmpty()
+        return !binding.etCredentialsName.text.isNullOrEmpty()
+                && !binding.etCredentialsAddress.text.isNullOrEmpty()
+                && !binding.etCredentialsContact.text.isNullOrEmpty()
     }
 
     fun showProgressDialog(context: Context){
