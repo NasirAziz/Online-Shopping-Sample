@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -17,6 +16,8 @@ import com.example.onlinestore.JazzPaymentActivity
 import com.example.onlinestore.MainActivity
 import com.example.onlinestore.R
 import com.example.onlinestore.databinding.CheckOutFragmentBinding
+import com.example.onlinestore.firebase.MyFirebaseFirestore
+import com.example.onlinestore.model.UserCredentials
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
@@ -40,6 +41,7 @@ class CheckOutFragment : Fragment() {
 
         private const val PAYMENT_STATUS_SUCCESS = 0
         private const val PAYMENT_STATUS_FAILED = -1
+        private const val PAYMENT_STATUS_COD = 1
         private const val PAYMENT_METHOD_COD = "COD"
         private const val PAYMENT_METHOD_JAZZ = "JAZZ"
 
@@ -53,17 +55,17 @@ class CheckOutFragment : Fragment() {
     private lateinit var binding: CheckOutFragmentBinding
     private var isRememberMeChecked = false
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.Sort_By).isVisible = false
-        super.onPrepareOptionsMenu(menu)
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        menu.findItem(R.id.Sort_By).isVisible = false
+//        super.onPrepareOptionsMenu(menu)
+//    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setHasOptionsMenu(true)
+        //  setHasOptionsMenu(true)
 
         binding = CheckOutFragmentBinding.inflate(layoutInflater)
         MainActivity.setActionBarTitle(requireActivity(), getString(R.string.check_out))
@@ -130,6 +132,7 @@ class CheckOutFragment : Fragment() {
                 }
                 R.id.rbCod -> {
                     paymentMethod = PAYMENT_METHOD_COD
+                    paymentStatus = PAYMENT_STATUS_COD
                 }
             }
         }
@@ -137,60 +140,9 @@ class CheckOutFragment : Fragment() {
         binding.btnPlaceOrder.setOnClickListener {
             if (viewModel.checkFieldsNotEmpty(binding)) {
                 if (isRememberMeChecked) {
-                    if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_SUCCESS) {
-                        viewModel.checkOutUserDetailsWriteToFirebase(
-                            binding,
-                            requireContext(),
-                            requireView()
-                        )
-                        viewModel.placeOrder(MainActivity(), requireView(), binding)
-                    } else if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_FAILED) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Payment was Failed try again",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    } else if (paymentMethod == PAYMENT_METHOD_COD) {
-                        //send cart data to server with credentials
-                        viewModel.checkOutUserDetailsWriteToFirebase(
-                            binding,
-                            requireContext(),
-                            requireView()
-                        )
-                        viewModel.placeOrder(requireActivity(), requireView(), binding)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Something went wrong please try again",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-
+                    checkOutFlow(true)
                 } else if (!isRememberMeChecked) {
-                    if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_SUCCESS) {
-                        //send cart data to server without writing credentials
-                        viewModel.placeOrder(requireActivity(), requireView(), binding)
-                    } else if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_FAILED) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Payment was Failed try again",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    } else if (paymentMethod == PAYMENT_METHOD_COD) {
-                        //send cart data to server without writing credentials
-                        viewModel.placeOrder(requireActivity(), requireView(), binding)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Something went wrong please try again",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-
+                    checkOutFlow(false)
                 }
             } else {
                 Snackbar.make(
@@ -200,6 +152,48 @@ class CheckOutFragment : Fragment() {
                 ).show()
             }
 
+        }
+    }
+
+    private fun checkOutFlow(isRememberMeChecked: Boolean) {
+        if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_SUCCESS) {
+            //send cart data to server without writing credentials
+            if (isRememberMeChecked) {
+                val uid = FirebaseAuth.getInstance().uid
+                val name = binding.etCOName.text.toString()
+                val address = binding.etCOAddress.text.toString()
+                val contact = binding.etCOContact.text.toString()
+                val user = UserCredentials(uid, name, address, contact)
+
+                MyFirebaseFirestore.writeUserCredentials(requireContext(), requireView(), user)
+            }
+            viewModel.placeOrder(requireActivity(), requireView(), binding)
+        } else if (paymentMethod == PAYMENT_METHOD_JAZZ && paymentStatus == PAYMENT_STATUS_FAILED) {
+            Toast.makeText(
+                requireContext(),
+                "Payment was Failed try again",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        } else if (paymentMethod == PAYMENT_METHOD_COD && paymentStatus == PAYMENT_STATUS_COD) {
+            //send cart data to server without writing credentials
+            if (isRememberMeChecked) {
+                val uid = FirebaseAuth.getInstance().uid
+                val name = binding.etCOName.text.toString()
+                val address = binding.etCOAddress.text.toString()
+                val contact = binding.etCOContact.text.toString()
+                val user = UserCredentials(uid, name, address, contact)
+
+                MyFirebaseFirestore.writeUserCredentials(requireContext(), requireView(), user)
+            }
+            viewModel.placeOrder(requireActivity(), requireView(), binding)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Something went wrong please try again",
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
     }
 

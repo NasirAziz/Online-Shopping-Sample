@@ -15,6 +15,10 @@ import com.example.onlinestore.firebase.MyFirebaseFirestore
 import com.example.onlinestore.model.UserCredentials
 import com.example.onlinestore.ui.main.MainFragment
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class UserCredentialsFragment : Fragment() {
 
@@ -24,6 +28,7 @@ class UserCredentialsFragment : Fragment() {
 
     private lateinit var viewModel: UserCredentialsViewModel
     private lateinit var binding: UserCredentailsFragmentBinding
+    private val scope = CoroutineScope(Dispatchers.IO)
     var dialog: Dialog? = null
 
 //    override fun onPrepareOptionsMenu(menu: Menu) {
@@ -46,34 +51,55 @@ class UserCredentialsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProvider(this).get(UserCredentialsViewModel::class.java)
 
-
-        viewModel.updateUI( binding, requireContext() )
+        viewModel.updateUI(binding, requireContext())
 
         binding.btnCredentialsUpdate.setOnClickListener {
-            if(MainFragment.checkInternetStateIfOnline(requireContext())) {
+            if (MainFragment.checkInternetStateIfOnline(requireContext())) {
                 if (checkFieldsNotEmpty()) {
-                    val uid = viewModel.uid
-
-                    val name = binding.etCredentialsName.text.toString()
-                    val address = binding.etCredentialsAddress.text.toString()
-                    val contact = binding.etCredentialsContact.text.toString()
-                    val user = UserCredentials(uid!!, name, address, contact)
-
-                    MyFirebaseFirestore.writeUserCredentials(requireContext(), requireView(), user)
+                    scope.launch {
+                        writeUserData()
+                    }
                 } else {
-
                     Snackbar.make(binding.root, "Please fill all fields.", Snackbar.LENGTH_LONG)
                         .show()
                 }
             }
-
         }
-
     }
 
+    private suspend fun writeUserData() {
+        val uid = viewModel.uid
+
+        val name = binding.etCredentialsName.text.toString()
+        val address = binding.etCredentialsAddress.text.toString()
+        val contact = binding.etCredentialsContact.text.toString()
+        val user = UserCredentials(uid!!, name, address, contact)
+
+        val write = CoroutineScope(Dispatchers.IO).async {
+            MyFirebaseFirestore.writeUserCredentials(
+                requireContext(),
+                requireView(),
+                user
+            )
+        }
+
+        write.await()
+        write.invokeOnCompletion {
+
+            if (it == null) {
+                Snackbar.make(
+                    requireContext(),
+                    requireView(),
+                    "Data has been updated successfully.",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        }
+    }
 
     private fun checkFieldsNotEmpty(): Boolean {
 

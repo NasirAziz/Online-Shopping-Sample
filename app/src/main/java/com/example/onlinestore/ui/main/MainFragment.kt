@@ -61,10 +61,6 @@ class MainFragment : Fragment() {
         val listOfProducts: Type = object : TypeToken<List<Product>>() {}.type
         products = Gson().fromJson(json, listOfProducts)
 
-        MobileAds.initialize(requireContext()) {
-            val adRequest = AdRequest.Builder().build()
-            binding.adView.loadAd(adRequest)
-        }
         val request = AdRequest.Builder().build()
 
         InterstitialAd.load(requireContext(),
@@ -88,6 +84,12 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = MainFragmentBinding.inflate(layoutInflater)
+
+        MobileAds.initialize(requireContext()) {
+            val adRequest = AdRequest.Builder().build()
+            binding.adView.loadAd(adRequest)
+        }
+
         MainActivity.setActionBarTitle(requireActivity(), getString(R.string.app_name))
 
         mainGridViewAdapter = MainGridViewAdapter(requireContext(), products!!)
@@ -123,7 +125,7 @@ class MainFragment : Fragment() {
 
         binding.fabMainCart.setOnClickListener {
 
-            // mInterstitialAd?.show(requireActivity())
+            mInterstitialAd?.show(requireActivity())
 
             requireActivity().supportFragmentManager
                 .beginTransaction()

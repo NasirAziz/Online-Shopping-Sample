@@ -38,46 +38,35 @@ class MyFirebaseFirestore {
                     .addOnSuccessListener {
                         UserCredentialsFragment().dismissProgressDialog()
                         userFavorites = it.toObjects<FavoriteProduct>().toMutableList()
-
                     }
 
-            }catch (e:java.lang.NullPointerException){
-                    Toast.makeText(
-                        context,
-                        "Couldn't get your favorites please check your internet connection.",
-                        Toast.LENGTH_LONG)
-                        .show()
+            } catch (e: java.lang.NullPointerException) {
+                Toast.makeText(
+                    context,
+                    "Couldn't get your favorites please check your internet connection.",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
             }
         }
 
         fun writeUserCredentials(context: Context,view: View, user: UserCredentials) {
 
-            val fragment = UserCredentialsFragment()
-            fragment.showProgressDialog(context)
-
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             val  db = MyFirebaseFirestore().getFireStore()
-                 db.collection("users").document(uid!!)
-                    .set(user).addOnSuccessListener {
-
-                        Snackbar.make(context,
-                            view,
-                            "Data has been updated successfully.",
-                            Snackbar.LENGTH_SHORT).show()
-
-                    }.addOnFailureListener {
-                        Snackbar.make(context,
-                            view,
-                            "Something went wrong: ${it.message}",
-                            Snackbar.LENGTH_SHORT).show()
-                    }.addOnCompleteListener {
-                        fragment.dismissProgressDialog()
-                     }
-
+            db.collection("users").document(uid!!)
+                .set(user).addOnFailureListener {
+                    Snackbar.make(
+                        context,
+                        view,
+                        "Something went wrong: ${it.message}",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
         }
 
         fun writeCartOrderToServer( activity: FragmentActivity, view: View, userOrder: UserOrder){
-            val fragment = UserCredentialsFragment.newInstance()
+            val fragment = UserCredentialsFragment()
             fragment.showProgressDialog(view.context)
 
             val  db = MyFirebaseFirestore().getFireStore()
