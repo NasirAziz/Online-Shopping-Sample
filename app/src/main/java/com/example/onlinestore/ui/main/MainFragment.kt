@@ -49,7 +49,6 @@ class MainFragment : Fragment() {
         }
     }
 
-
     private lateinit var viewModel: MainViewModel
     private lateinit var mainGridViewAdapter: MainGridViewAdapter
     private lateinit var binding: MainFragmentBinding
